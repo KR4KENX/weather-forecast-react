@@ -1,30 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Forecast from './components/Forecast';
 import NextDays from './components/NextDays';
+
 import rainy from '../src/assets/rainy.png'
 import sunny from '../src/assets/sunny.png'
 import cloudy from '../src/assets/cloudy.png'
 
 function App() {  
-  const [location, setLocation] = React.useState("");
-  const [weather, setWeather] = React.useState({
+  const [location, setLocation] = useState("");
+  const [weather, setWeather] = useState({
       temp: "",
       location: "",
       condition: "",
       humidity: ""
     });
-  const [nextDays, setNextDays] = React.useState()
-  const [isCelcius, setScale] = React.useState(false);
-  const [defaultLocation, setDefaultLocation] = React.useState('');
+  const [nextDays, setNextDays] = useState()
+  const [isCelcius, setScale] = useState(false);
+  const [defaultLocation, setDefaultLocation] = useState('');
 
-  React.useEffect(() => {
+  useEffect(() => {
     if(!defaultLocation)
       return;
 
     localStorage.setItem('defaultLocationItem', defaultLocation);
   }, [defaultLocation]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     let storageItem = localStorage.getItem('defaultLocationItem');
     if(storageItem != undefined){
       setDefaultLocation(storageItem)
@@ -40,41 +41,13 @@ function App() {
 
   //setting weekday
     function setWeekday(day){
-      switch (day){
-        case 0:
-          return "Sunday"
-        break;
-        case 1:
-          return "Monday"
-        break;
-        case 2:
-          return "Tuesday"
-        break;
-        case 3:
-          return "Wednesday"
-        break;
-        case 4:
-          return "Thursday"
-        break;
-        case 5:
-          return "Friday"
-        break;
-        case 6:
-          return "Saturday"
-        break;
-        case 7:
-          return "Sunday"
-        break;
-        case 8:
-          return "Monday"
-        break;
-        case 9:
-          return "Tuesday"
-        break;
-        case 10:
-          return "Wednesday"
-        break;
-      }
+      if(day == 0 || day == 7) return "Sunday";
+      if(day == 1 || day == 8) return "Monday";
+      if(day == 2 || day == 9) return "Tuesday";
+      if(day == 3 || day == 10) return "Wednesday";
+      if(day == 4) return "Thursday";
+      if(day == 5) return "Friday";
+      if(day == 6) return "Saturday";
     }
   //setting scale
   function setTemperatureScale(temp,isCelciusScale){
@@ -87,7 +60,13 @@ function App() {
   }
 
   //setting clouds image
-    function setWeatherImage(currentCondition){
+  const images = {
+    cloudy: cloudy,
+    rainy: rainy,
+    sunny: sunny,
+  }
+
+  function setWeatherImage(currentCondition){
       if(currentCondition === "Partially cloudy"){
           return images.cloudy;
       }
@@ -101,17 +80,11 @@ function App() {
           return images.cloudy;
       }
   }
-
-  const images = {
-    cloudy: cloudy,
-    rainy: rainy,
-    sunny: sunny,
-  }
   //setting date in header
-    let date = new Date();
-    let weekday = setWeekday(date.getDay());
+  let date = new Date();
+  let weekday = setWeekday(date.getDay());
 
-	  let current_date = weekday + " " + date.getDate() + "." + parseInt(date.getMonth()+1) + "." + date.getFullYear();
+  let current_date = weekday + " " + date.getDate() + "." + parseInt(date.getMonth()+1) + "." + date.getFullYear();
 
   //scale State (default is fahrenheit)
     function toggleTempScale(){
@@ -125,30 +98,20 @@ function App() {
       .then((data) => {;
         setNextDays(() => {
           //next 3 days
-          return[
-            [
-              data.days[1].temp,
-              data.days[1].tempmax,
-              setWeekday(date.getDay()+1),
-              setWeatherImage(data.days[1].conditions),
+          const howManyDays = 3;
+          const nextDaysArray = [];
+          for(let i=0; i<howManyDays; i++){
+            nextDaysArray.push([
+              data.days[i+1].temp,
+              data.days[1+1].tempmax,
+              setWeekday(date.getDay()+i+1),
+              setWeatherImage(data.days[i+1].conditions),
               date.getDate()+"."+parseInt(date.getMonth()+1)
-            ],
-            [
-              data.days[2].temp,
-              data.days[2].tempmax,
-              setWeekday(date.getDay()+2),
-              setWeatherImage(data.days[2].conditions),
-              parseInt(date.getDate()+1)+"."+parseInt(date.getMonth()+1)
-            ],
-            [
-              data.days[3].temp,
-              data.days[3].tempmax,
-              setWeekday(date.getDay()+3),
-              setWeatherImage(data.days[3].conditions),
-              parseInt(date.getDate()+2)+"."+parseInt(date.getMonth()+1)
-            ]
-          ]
+            ]);
+          }
+          return nextDaysArray;
         })
+
         setWeather(() => {
           //today
         return{
