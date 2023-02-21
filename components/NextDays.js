@@ -1,14 +1,13 @@
 import React from "react";
 
 export default function NextDays(props){
-    console.log(props.tempScale)
     return (
         <div>
             {props.nextDays && 
                 <section>
-                    {props.nextDays.map((element) => {
+                    {props.nextDays.map((element, key) => {
                         return (
-                                <div className="next-day--forecast">
+                                <div key={key} className="next-day--forecast">
                                     <h3>{element[2]}</h3>
                                     <p>{element[4]}</p>
                                     <img src={element[3]}/>

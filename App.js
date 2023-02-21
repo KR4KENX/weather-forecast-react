@@ -6,9 +6,40 @@ import sunny from './sunny.png'
 import cloudy from './cloudy.png'
 
 function App() {  
+  const [location, setLocation] = React.useState("");
+  const [weather, setWeather] = React.useState({
+      temp: "",
+      location: "",
+      condition: "",
+      humidity: ""
+    });
+  const [nextDays, setNextDays] = React.useState()
+  const [isCelcius, setScale] = React.useState(false);
+  const [defaultLocation, setDefaultLocation] = React.useState('');
+
+  React.useEffect(() => {
+    if(!defaultLocation)
+      return;
+
+    localStorage.setItem('defaultLocationItem', defaultLocation);
+  }, [defaultLocation]);
+
+  React.useEffect(() => {
+    let storageItem = localStorage.getItem('defaultLocationItem');
+    if(storageItem != undefined){
+      setDefaultLocation(storageItem)
+    };
+    
+    let splitedPlace = storageItem.split(',');
+
+    if(!splitedPlace)
+      return;
+
+    loadWeatherFromApi(splitedPlace[0]);
+  }, [])
+
   //setting weekday
     function setWeekday(day){
-      console.log(day);
       switch (day){
         case 0:
           return "Sunday"
@@ -75,7 +106,7 @@ function App() {
     cloudy: cloudy,
     rainy: rainy,
     sunny: sunny,
-}
+  }
   //setting date in header
     let date = new Date();
     let weekday = setWeekday(date.getDay());
@@ -86,23 +117,14 @@ function App() {
     function toggleTempScale(){
       setScale(prevValue => !prevValue)
     }
-    const [isCelcius, setScale] = React.useState(false);
-  //location to check forecast
-    const [location, setLocation] = React.useState("");
-    const [weather, setWeather] = React.useState({
-      temp: "",
-      location: "",
-      condition: "",
-      humidity: ""
-    });
-    const [nextDays, setNextDays] = React.useState()
+    
     //connect with API
-    function loadWeatherFromApi(){
-      fetch('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/' + location +'?unitGroup=metric&include=current&key=8EYW3S44EPSLY4M2LSUEX8Y2B&contentType=json')
+    function loadWeatherFromApi(place){
+      fetch('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/' + place +'?unitGroup=metric&include=current&key=8EYW3S44EPSLY4M2LSUEX8Y2B&contentType=json')
       .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
+      .then((data) => {;
         setNextDays(() => {
+          //next 3 days
           return[
             [
               data.days[1].temp,
@@ -128,6 +150,7 @@ function App() {
           ]
         })
         setWeather(() => {
+          //today
         return{
           temp: data.days[0].temp,isCelcius,
           location: data.resolvedAddress,
@@ -143,7 +166,7 @@ function App() {
       <header>
         <div id="left--panel">
             <input type="text" placeholder="Insert location..." onInput={(event) => {setLocation(event.target.value)}}></input>
-            <span className="material-symbols-outlined" onClick={() => {loadWeatherFromApi()}}>
+            <span className="material-symbols-outlined" onClick={() => {loadWeatherFromApi(location)}}>
             location_on
             </span>
         </div>
@@ -165,6 +188,7 @@ function App() {
           weather={weather}
           tempScale={isCelcius}
           setTemperatureScale={setTemperatureScale}
+          setDefLocation={setDefaultLocation}
       />
       <NextDays
           nextDays={nextDays}

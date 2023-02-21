@@ -2,27 +2,42 @@
 
 body {
   margin: 0;
+  padding: 0;
   font-family: "Noto Sans", sans-serif;
   box-sizing: border-box;
-  background-color: rgb(48, 174, 242);
+  background: url('/src/assets/weather1.jpg') no-repeat fixed center;
+  background-size: cover;;
+  color: #222222;
+}
+button, input[type="submit"], input[type="reset"] {
+	background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
 }
 header{
-  width: 90vw;
+  width: 90%;
   margin: auto;
   padding: .5em;
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
   align-items: center;
-  margin-top: 1em;
-  color: #fff;
+  color: #222;
+  background-color: #fff;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  box-shadow: rgba(34, 34, 34, 0.5) 0px 10px 10px;
 }
 header input{
   background-color: transparent;
   border: none;
-  border-bottom: 2px solid #fff;
+  border-bottom: 2px solid #333;
   width: 15rem;
-  color: #fff;
+  color: #222;
   font-size: 1.3em;
 }
 header input:focus{
@@ -35,20 +50,40 @@ header input::placeholder{
   cursor: pointer;
 }
 #right--panel h3{
+  text-align: center;
   font-size: 1.3em;
-  font-weight: 700;
+  font-weight: 400;
 }
 main{
-  padding: 1em;
-  width: 70%;
-  margin: auto;
-  margin-bottom: 2em;
-  color: #eee;
+  padding: 2em;
+  max-width: 80%;
+  margin: 1em auto 1em auto;
+  color: #222;
   text-align: center;
+  background-color: rgba(255, 255, 255, 0.7);
 }
-main h3{
-  font-size: 2.5em;
-  font-weight: 400;
+.location--box h3{
+  font-size: 2.2em;
+  font-weight: 700;
+}
+.location--box{
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.location--box button{
+  padding: 1.5em 1em;
+  border-radius: 10px;
+  box-shadow: rgba(34, 34, 34, 0.3) 0 5px 5px;
+  background-color: #fff;
+  color: #222;
+  border: 2px solid #222;
+  transition: .2s ease-in;
+}
+.location--box button:hover{
+  box-shadow: rgba(34, 34, 34, 0.8) 0 5px 5px;
+  background-color: #f5f5f5;
 }
 .temp-box{
   display: flex;
@@ -68,23 +103,24 @@ main h3{
   text-align: left;
 }
 section{
-  padding: 1em;
-  max-width: 70%;
-  background-color: #fff;
+  padding: 2em;
+  width: 80vw;
   margin: auto;
+  margin-bottom: 2em;
+  background-color: #fff;
   box-shadow: 5px 5px 15px rgba(34, 34, 34,0.5);
-  margin-bottom: 3em;
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
+  border-radius: 10px;
 }
 .next-day--forecast{
   display: flex;
   flex-direction: column;
   text-align: center;
-  padding: 3em;
+  padding: 1em 3em;
+  margin: 1em;
   border: 2px solid rgba(34, 34, 34, 0.8);
-  border-radius: 10px;
 }
 .next-day--forecast img{
   width: 10em;
@@ -94,13 +130,13 @@ section{
 }
 .next-day--forecast h4{
   font-size: 1.5em;
-  font-weight: 300;
+  font-weight: 400;
 }
 .next-day--forecast h4 span:nth-child(1){
   color: rgb(62, 168, 203);
 }
 .next-day--forecast h4 span:nth-child(2){
-  color: rgb(171, 33, 33);
+  color: rgb(193, 36, 36);
 }
 .next-day--forecast span{
   margin-left: .5rem;
@@ -141,11 +177,11 @@ section{
 }
 
 .toggler--light {
-  color: #222222;
+  color: #222;
 }
 
 .toggler--dark {
-  color: #f0f0f0;
+  color: #222;
 }
 
 .toggler#celcius .toggler-dark {
