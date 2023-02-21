@@ -1,9 +1,9 @@
 import React from 'react';
 import Forecast from './components/Forecast';
 import NextDays from './components/NextDays';
-import rainy from './rainy.png'
-import sunny from './sunny.png'
-import cloudy from './cloudy.png'
+import rainy from '../src/assets/rainy.png'
+import sunny from '../src/assets/sunny.png'
+import cloudy from '../src/assets/cloudy.png'
 
 function App() {  
   const [location, setLocation] = React.useState("");
@@ -29,7 +29,7 @@ function App() {
     if(storageItem != undefined){
       setDefaultLocation(storageItem)
     };
-    
+
     let splitedPlace = storageItem.split(',');
 
     if(!splitedPlace)
